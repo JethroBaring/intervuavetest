@@ -1,0 +1,11 @@
+model InterviewTemplate {
+  id          String            @id @default(cuid())
+  name        String
+  companyId   String
+  company     Company           @relation(fields: [companyId], references: [id])
+  questions   Question[]
+  metrics     ResponseMetric[]
+  positions   Position[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}

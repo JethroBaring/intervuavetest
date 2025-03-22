@@ -1,0 +1,20 @@
+model Question {
+  id            String     @id @default(cuid())
+  questionText  String
+  linkedValueId String
+  inspiredBy    InspiredBy // "mission", "vision", "culture" (nullable)
+  templateId     String
+  template       InterviewTemplate @relation(fields: [templateId], references: [id])
+  coreValue     CoreValue  @relation(fields: [linkedValueId], references: [id])
+
+  responses  Response[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+}
+
+enum InspiredBy {
+  MISSION
+  VISION
+  CULTURE
+}

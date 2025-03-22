@@ -1,0 +1,40 @@
+model Interview {
+  id            String          @id @default(cuid())
+  candidateId   String
+  positionId    String
+  interviewLink String          @unique // Unique interview access link
+  expiresAt     DateTime // Expiration time for the interview link
+  videoUrl      String
+  cameraType    InputType // "built-in", "external"
+  micType       InputType // "usb", "built-in"
+  noiseLevel    Float? // 0.0 (quiet) to 1.0 (noisy)
+  deviceType    DeviceType // "desktop", "laptop", "tablet", "mobile"
+  candidate     Candidate       @relation(fields: [candidateId], references: [id])
+  position      Position        @relation(fields: [positionId], references: [id])
+  responses     Response[]
+  evaluation    Evaluation?
+  status        InterviewStatus @default(PENDING)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+}
+
+enum InterviewStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  EXPIRED
+  CANCELLED
+}
+
+enum DeviceType {
+  LAPTOP
+  DESKTOP
+  MOBILE
+  TABLET
+}
+
+enum InputType {
+  BUILT_IN
+  EXTERNAL
+}

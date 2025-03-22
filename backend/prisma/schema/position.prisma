@@ -1,0 +1,12 @@
+model Position {
+  id                  String            @id @default(cuid())
+  title               String
+  companyId           String
+  company             Company           @relation(fields: [companyId], references: [id])
+  interviews          Interview[]
+  interviewTemplateId String
+  interviewTemplate   InterviewTemplate @relation(fields: [interviewTemplateId], references: [id])
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  deletedAt           DateTime?
+}
