@@ -18,6 +18,10 @@ export class TemplatesService {
     try {
       return await this.prisma.interviewTemplate.create({
         data: createTemplateDto,
+        include: {
+          questions: true,
+          metrics: true,
+        },
       });
     } catch (error) {
       this.logger.error('Failed to create interview template', error);
@@ -27,14 +31,16 @@ export class TemplatesService {
     }
   }
 
-  async findAll() {
+  async findAll(id: string) {
     try {
       return await this.prisma.interviewTemplate.findMany({
         include: {
-          company: true,
           questions: true,
           metrics: true,
           positions: true,
+        },
+        where: {
+          companyId: id,
         },
       });
     } catch (error) {
@@ -68,6 +74,12 @@ export class TemplatesService {
       return await this.prisma.interviewTemplate.update({
         where: { id },
         data: updateTemplateDto,
+        include: {
+          company: true,
+          questions: true,
+          metrics: true,
+          positions: true,
+        },
       });
     } catch (error) {
       this.logger.error(`Failed to update template with id: ${id}`, error);

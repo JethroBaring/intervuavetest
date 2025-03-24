@@ -1,8 +1,8 @@
 model ResponseMetric {
-  id          String   @id @default(cuid())
-  name        String
-  description String
-  weight      Float    @default(1.0) // Optional weight
+  id                  String            @id @default(cuid())
+  name                String
+  description         String
+  weight              Float             @default(1.0) // Optional weight
   interviewTemplateId String
-  interviewTemplate   InterviewTemplate @relation(fields: [interviewTemplateId], references: [id])
+  interviewTemplate   InterviewTemplate @relation(fields: [interviewTemplateId], references: [id], onDelete: Cascade)
 }

@@ -6,11 +6,16 @@ import {
 } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { VersioningType } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  const configService = app.get(ConfigService);
+  app.enableCors({
+    origin: configService.get<string>('FRONTEND_URL'), // your frontend origin
+    credentials: true, // allow cookies to be sent
+  });
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,

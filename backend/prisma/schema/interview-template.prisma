@@ -2,7 +2,7 @@ model InterviewTemplate {
   id          String            @id @default(cuid())
   name        String
   companyId   String
-  company     Company           @relation(fields: [companyId], references: [id])
+  company     Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
   questions   Question[]
   metrics     ResponseMetric[]
   positions   Position[]

@@ -2,16 +2,16 @@ import { Prisma } from '@prisma/client';
 export class CreateQuestionDto {
   id?: string;
   questionText: string;
-  inspiredBy: InspiredBy;
+  alignedWith: AlignedWith;
+  evaluates: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
-  position: Prisma.PositionCreateNestedOneWithoutQuestionsInput;
-  coreValue: Prisma.CoreValueCreateNestedOneWithoutQuestionsInput;
+  template: Prisma.InterviewTemplateCreateNestedOneWithoutQuestionsInput;
   responses?: Prisma.ResponseCreateNestedManyWithoutQuestionInput;
 }
 
-export enum InspiredBy {
+export enum AlignedWith {
   MISSION = 'MISSION',
   VISION = 'VISION',
   CULTURE = 'CULTURE',

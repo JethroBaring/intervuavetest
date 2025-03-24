@@ -30,7 +30,6 @@ export class PositionsService {
       return await this.prisma.position.findMany({
         include: {
           company: true,
-          questions: true,
           interviews: true,
         },
       });
@@ -46,7 +45,6 @@ export class PositionsService {
         where: { id },
         include: {
           company: true,
-          questions: true,
           interviews: true,
         },
       });

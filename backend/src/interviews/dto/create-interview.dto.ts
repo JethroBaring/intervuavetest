@@ -9,6 +9,8 @@ export class CreateInterviewDto {
   noiseLevel?: number | null;
   deviceType: DeviceType;
   status?: InterviewStatus;
+  aiDecision?: Decision | null;
+  finalDecision?: Decision | null;
   createdAt?: Date | string;
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
@@ -31,9 +33,16 @@ export enum DeviceType {
 }
 
 export enum InterviewStatus {
+  DRAFT = 'DRAFT',
   PENDING = 'PENDING',
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
+  PROCESSING = 'PROCESSING',
+  EVALUATED = 'EVALUATED',
   EXPIRED = 'EXPIRED',
-  CANCELLED = 'CANCELLED',
+}
+
+export enum Decision {
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 }

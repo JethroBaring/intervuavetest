@@ -27,12 +27,7 @@ export class QuestionsService {
 
   async findAll() {
     try {
-      return await this.prisma.question.findMany({
-        include: {
-          coreValue: true,
-          position: true,
-        },
-      });
+      return await this.prisma.question.findMany();
     } catch (error) {
       this.logger.error('Failed to fetch questions', error);
       throw new InternalServerErrorException('Failed to fetch questions');
@@ -43,10 +38,6 @@ export class QuestionsService {
     try {
       const question = await this.prisma.question.findUnique({
         where: { id },
-        include: {
-          coreValue: true,
-          position: true,
-        },
       });
 
       if (!question) throw new NotFoundException('Question not found');

@@ -36,13 +36,13 @@ const main = async () => {
     'Sales & Business Development',
   ];
 
-  for (const category of jobCategories) {
-    await prisma.jobCategory.upsert({
-      where: { name: category },
-      update: {},
-      create: { name: category },
-    });
-  }
+  // for (const category of jobCategories) {
+  //   await prisma.jobCategory.upsert({
+  //     where: { name: category },
+  //     update: {},
+  //     create: { name: category },
+  //   });
+  // }
 
   console.log('✅ Job categories seeded successfully.');
 };

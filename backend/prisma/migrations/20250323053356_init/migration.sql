@@ -1,11 +1,14 @@
 -- CreateEnum
-CREATE TYPE "InterviewStatus" AS ENUM ('PENDING', 'IN_PROGRESS', 'COMPLETED', 'EXPIRED', 'CANCELLED');
+CREATE TYPE "InterviewStatus" AS ENUM ('DRAFT', 'PENDING', 'IN_PROGRESS', 'COMPLETED', 'PROCESSING', 'EVALUATED', 'EXPIRED');
 
 -- CreateEnum
 CREATE TYPE "DeviceType" AS ENUM ('LAPTOP', 'DESKTOP', 'MOBILE', 'TABLET');
 
 -- CreateEnum
 CREATE TYPE "InputType" AS ENUM ('BUILT_IN', 'EXTERNAL');
+
+-- CreateEnum
+CREATE TYPE "Decision" AS ENUM ('APPROVED', 'REJECTED');
 
 -- CreateEnum
 CREATE TYPE "InspiredBy" AS ENUM ('MISSION', 'VISION', 'CULTURE');
@@ -29,9 +32,9 @@ CREATE TABLE "Candidate" (
 CREATE TABLE "Company" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "mission" TEXT NOT NULL,
-    "vision" TEXT NOT NULL,
-    "culture" TEXT NOT NULL,
+    "mission" TEXT,
+    "vision" TEXT,
+    "culture" TEXT,
     "ownerId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -96,6 +99,8 @@ CREATE TABLE "Interview" (
     "noiseLevel" DOUBLE PRECISION,
     "deviceType" "DeviceType" NOT NULL,
     "status" "InterviewStatus" NOT NULL DEFAULT 'PENDING',
+    "aiDecision" "Decision",
+    "finalDecision" "Decision",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),

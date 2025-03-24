@@ -12,6 +12,8 @@ import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { User } from '@prisma/client';
 
 @Controller({ path: 'companies', version: '1' })
 export class CompaniesController {
@@ -27,6 +29,13 @@ export class CompaniesController {
   @UseGuards(JwtAuthGuard)
   findAll() {
     return this.companiesService.findAll();
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  findOneByUser(@CurrentUser() user: User) {
+    console.log({ HANNAH: user.id });
+    return this.companiesService.findOneByUser(user.id);
   }
 
   @Get(':id')

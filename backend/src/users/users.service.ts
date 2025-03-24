@@ -10,6 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'nestjs-prisma';
 import { hash } from 'bcryptjs';
 import isPrismaError from 'src/utils/isPrimsaError';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -18,13 +19,18 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-    const { email, password } = createUserDto;
-
+    const { email, password, companyName } = createUserDto;
     try {
       const user = await this.prismaService.user.create({
         data: {
           email,
           password: await hash(password, 10),
+          role: Role.COMPANY,
+          company: {
+            create: {
+              name: companyName,
+            },
+          },
         },
       });
 
@@ -52,10 +58,27 @@ export class UsersService {
     try {
       const user = await this.prismaService.user.findUnique({
         where: { id },
+        select: {
+          id: true,
+          email: true,
+          role: true,
+          refreshToken: true,
+          company: {
+            select: {
+              id: true,
+            },
+          },
+        },
       });
 
-      if (!user) throw new NotFoundException('User not found');
-      return user;
+      const result = {
+        ...user,
+        companyId: user?.company?.id ?? null,
+      };
+
+      if (!result) throw new NotFoundException('User not found');
+
+      return result;
     } catch (error) {
       this.logger.error(`Error in findOne method`, error);
       throw new InternalServerErrorException('Failed to find user');

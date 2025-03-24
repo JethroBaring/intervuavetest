@@ -7,6 +7,6 @@ export class CreatePositionDto {
   updatedAt?: Date | string;
   deletedAt?: Date | string | null;
   company: Prisma.CompanyCreateNestedOneWithoutPositionsInput;
-  questions?: Prisma.QuestionCreateNestedManyWithoutPositionInput;
   interviews?: Prisma.InterviewCreateNestedManyWithoutPositionInput;
+  interviewTemplate: Prisma.InterviewTemplateCreateNestedOneWithoutPositionsInput;
 }

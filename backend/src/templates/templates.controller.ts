@@ -11,7 +11,7 @@ import { TemplatesService } from './templates.service';
 import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 
-@Controller('templates')
+@Controller({ path: 'templates', version: '1' })
 export class TemplatesController {
   constructor(private readonly templatesService: TemplatesService) {}
 
@@ -20,9 +20,9 @@ export class TemplatesController {
     return this.templatesService.create(createTemplateDto);
   }
 
-  @Get()
-  findAll() {
-    return this.templatesService.findAll();
+  @Get(':id')
+  findAll(@Param('id') id: string) {
+    return this.templatesService.findAll(id);
   }
 
   @Get(':id')

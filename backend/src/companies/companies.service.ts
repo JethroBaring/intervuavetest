@@ -46,13 +46,39 @@ export class CompaniesService {
         include: {
           coreValues: true,
           positions: true,
+          interviewTemplates: true,
         },
       });
 
       if (!company) throw new NotFoundException('Company not found');
       return company;
     } catch (error) {
-      this.logger.error(`Failed to fetch company with id: ${id}`, error);
+      this.logger.error(`Failed to fetch company with id: ${id}sda`, error);
+      throw error;
+    }
+  }
+
+  async findOneByUser(id: string) {
+    try {
+      const company = await this.prisma.company.findUnique({
+        where: { ownerId: id },
+        include: {
+          coreValues: true,
+          positions: true,
+          interviewTemplates: {
+            include: {
+              questions: true,
+              metrics: true,
+              positions: true,
+            },
+          },
+        },
+      });
+
+      if (!company) throw new NotFoundException('Company not found');
+      return company;
+    } catch (error) {
+      this.logger.error(`Failed to fetch company with id: ${id}hello`, error);
       throw error;
     }
   }

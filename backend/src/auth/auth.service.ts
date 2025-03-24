@@ -6,6 +6,7 @@ import { User } from '@prisma/client';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayload } from './token-payload.interface';
+import { UserRole } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -63,6 +64,15 @@ export class AuthService {
     response.cookie('Refresh', refreshToken, {
       httpOnly: true,
       expires: expiresRefreshToken,
+    });
+  }
+
+  async register(user: User) {
+    await this.usersService.create({
+      email: user.email,
+      password: user.password,
+      role: UserRole.COMPANY,
+      companyName: 'Sample Company',
     });
   }
 

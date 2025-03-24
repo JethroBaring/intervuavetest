@@ -1,13 +1,12 @@
 model Question {
-  id            String     @id @default(cuid())
+  id            String            @id @default(cuid())
   questionText  String
-  linkedValueId String
-  inspiredBy    InspiredBy // "mission", "vision", "culture" (nullable)
-  templateId     String
-  template       InterviewTemplate @relation(fields: [templateId], references: [id])
-  coreValue     CoreValue  @relation(fields: [linkedValueId], references: [id])
+  alignedWith    InspiredBy // "mission", "vision", "culture" (nullable)
+  templateId    String
+  template      InterviewTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  evaluates     String
 
-  responses  Response[]
+  responses Response[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   deletedAt DateTime?
