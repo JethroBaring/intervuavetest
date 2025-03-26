@@ -1,12 +1,11 @@
 import {
   Injectable,
-  InternalServerErrorException,
   Logger,
-  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { CreateEvaluationDto } from './dto/create-evaluation.dto';
-import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
+import { CreateEvaluationsDto } from './dto/create-evaluations.dto';
+import { UpdateEvaluationsDto } from './dto/update-evaluations.dto';
 
 @Injectable()
 export class EvaluationsService {
@@ -14,69 +13,53 @@ export class EvaluationsService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createEvaluationDto: CreateEvaluationDto) {
+  async create(createDto: CreateEvaluationsDto) {
     try {
       return await this.prisma.evaluation.create({
-        data: createEvaluationDto,
+        data: createDto,
       });
     } catch (error) {
-      this.logger.error('Failed to create evaluation', error);
-      throw new InternalServerErrorException('Failed to create evaluation');
+      this.logger.error('Failed to create evaluations', error);
+      throw new InternalServerErrorException('Failed to create evaluations');
     }
   }
 
   async findAll() {
     try {
-      return await this.prisma.evaluation.findMany({
-        include: {
-          interview: true,
-        },
-      });
+      return await this.prisma.evaluation.findMany();
     } catch (error) {
-      this.logger.error('Failed to fetch evaluations', error);
-      throw new InternalServerErrorException('Failed to fetch evaluations');
+      this.logger.error('Failed to get evaluations', error);
+      throw new InternalServerErrorException('Failed to get evaluations');
     }
   }
 
   async findOne(id: string) {
     try {
-      const evaluation = await this.prisma.evaluation.findUnique({
-        where: { id },
-        include: {
-          interview: true,
-        },
-      });
-
-      if (!evaluation) throw new NotFoundException('Evaluation not found');
-      return evaluation;
+      return await this.prisma.evaluation.findUnique({ where: { id } });
     } catch (error) {
-      this.logger.error(`Failed to fetch evaluation with id: ${id}`, error);
-      throw error;
+      this.logger.error('Failed to get evaluations', error);
+      throw new InternalServerErrorException('Failed to get evaluations');
     }
   }
 
-  async update(id: string, updateEvaluationDto: UpdateEvaluationDto) {
+  async update(id: string, updateDto: UpdateEvaluationsDto) {
     try {
       return await this.prisma.evaluation.update({
         where: { id },
-        data: updateEvaluationDto,
+        data: updateDto,
       });
     } catch (error) {
-      this.logger.error(`Failed to update evaluation with id: ${id}`, error);
-      throw new InternalServerErrorException('Failed to update evaluation');
+      this.logger.error('Failed to update evaluations', error);
+      throw new InternalServerErrorException('Failed to update evaluations');
     }
   }
 
   async remove(id: string) {
     try {
-      await this.prisma.evaluation.delete({
-        where: { id },
-      });
-
-      return { message: `Evaluation ${id} removed successfully.` };
+      return await this.prisma.evaluation.delete({ where: { id } });
     } catch (error) {
-      this.logger.error(`Failed to remove evaluation with id: ${id}`, error);
-      throw new InternalServerErrorException('Failed to remove evaluation');
+      this.logger.error('Failed to delete evaluations', error);
+      throw new InternalServerErrorException('Failed to delete evaluations');
     }
   }
 }

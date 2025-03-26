@@ -1,52 +1,43 @@
 import {
   Controller,
-  Get,
   Post,
-  Body,
-  Patch,
+  Get,
   Param,
+  Patch,
+  Body,
   Delete,
-  UseGuards,
 } from '@nestjs/common';
 import { InterviewsService } from './interviews.service';
-import { CreateInterviewDto } from './dto/create-interview.dto';
-import { UpdateInterviewDto } from './dto/update-interview.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CreateInterviewsDto } from './dto/create-interviews.dto';
+import { UpdateInterviewsDto } from './dto/update-interviews.dto';
 
-@Controller({ path: 'interviews', version: '1' })
+@Controller({ path: 'candidates/:candidateId/interviews', version: '1' })
 export class InterviewsController {
-  constructor(private readonly interviewsService: InterviewsService) {}
+  constructor(private readonly service: InterviewsService) {}
 
-  @Post()
-  @UseGuards(JwtAuthGuard)
-  create(@Body() createInterviewDto: CreateInterviewDto) {
-    return this.interviewsService.create(createInterviewDto);
-  }
-
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  findAll() {
-    return this.interviewsService.findAll();
-  }
-
-  @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  findOne(@Param('id') id: string) {
-    return this.interviewsService.findOne(id);
-  }
-
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  update(
-    @Param('id') id: string,
-    @Body() updateInterviewDto: UpdateInterviewDto,
+  @Post() create(
+    @Param('candidateId') candidateId: string,
+    @Body() dto: CreateInterviewsDto,
   ) {
-    return this.interviewsService.update(id, updateInterviewDto);
+    return this.service.create(candidateId, dto);
   }
 
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.interviewsService.remove(id);
+  @Get() findAll(@Param('companyId') companyId: string) {
+    return this.service.findAll(companyId);
+  }
+
+  @Get(':interviewId') findOne(@Param('interviewId') id: string) {
+    return this.service.findOne(id);
+  }
+
+  @Patch(':interviewId') update(
+    @Param('interviewId') id: string,
+    @Body() dto: UpdateInterviewsDto,
+  ) {
+    return this.service.update(id, dto);
+  }
+
+  @Delete(':interviewId') remove(@Param('interviewId') id: string) {
+    return this.service.remove(id);
   }
 }

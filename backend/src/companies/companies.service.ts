@@ -1,12 +1,11 @@
 import {
   Injectable,
-  InternalServerErrorException,
   Logger,
-  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { CreateCompanyDto } from './dto/create-company.dto';
-import { UpdateCompanyDto } from './dto/update-company.dto';
+import { CreateCompanyDto } from './dto/create-companies.dto';
+import { UpdateCompanyDto } from './dto/update-companies.dto';
 
 @Injectable()
 export class CompaniesService {
@@ -14,101 +13,53 @@ export class CompaniesService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createCompanyDto: CreateCompanyDto) {
+  async create(createDto: CreateCompanyDto) {
     try {
       return await this.prisma.company.create({
-        data: createCompanyDto,
+        data: createDto,
       });
     } catch (error) {
-      this.logger.error('Failed to create company', error);
-      throw new InternalServerErrorException('Failed to create company');
+      this.logger.error('Failed to create companies', error);
+      throw new InternalServerErrorException('Failed to create companies');
     }
   }
 
   async findAll() {
     try {
-      return await this.prisma.company.findMany({
-        include: {
-          coreValues: true,
-          positions: true,
-        },
-      });
+      return await this.prisma.company.findMany();
     } catch (error) {
-      this.logger.error('Failed to fetch companies', error);
-      throw new InternalServerErrorException('Failed to fetch companies');
+      this.logger.error('Failed to get companies', error);
+      throw new InternalServerErrorException('Failed to get companies');
     }
   }
 
   async findOne(id: string) {
     try {
-      const company = await this.prisma.company.findUnique({
-        where: { id },
-        include: {
-          coreValues: true,
-          positions: true,
-          interviewTemplates: true,
-        },
-      });
-
-      if (!company) throw new NotFoundException('Company not found');
-      return company;
+      return await this.prisma.company.findUnique({ where: { id } });
     } catch (error) {
-      this.logger.error(`Failed to fetch company with id: ${id}sda`, error);
-      throw error;
+      this.logger.error('Failed to get companies', error);
+      throw new InternalServerErrorException('Failed to get companies');
     }
   }
 
-  async findOneByUser(id: string) {
-    try {
-      const company = await this.prisma.company.findUnique({
-        where: { ownerId: id },
-        include: {
-          coreValues: true,
-          positions: {
-            include: {
-              interviewTemplate: true,
-            },
-          },
-          interviewTemplates: {
-            include: {
-              questions: true,
-              metrics: true,
-              positions: true,
-            },
-          },
-        },
-      });
-
-      if (!company) throw new NotFoundException('Company not found');
-      return company;
-    } catch (error) {
-      this.logger.error(`Failed to fetch company with id: ${id}hello`, error);
-      throw error;
-    }
-  }
-
-  async update(id: string, updateCompanyDto: UpdateCompanyDto) {
+  async update(id: string, updateDto: UpdateCompanyDto) {
     try {
       return await this.prisma.company.update({
         where: { id },
-        data: updateCompanyDto,
+        data: updateDto,
       });
     } catch (error) {
-      this.logger.error(`Failed to update company with id: ${id}`, error);
-      throw new InternalServerErrorException('Failed to update company');
+      this.logger.error('Failed to update companies', error);
+      throw new InternalServerErrorException('Failed to update companies');
     }
   }
 
   async remove(id: string) {
     try {
-      await this.prisma.company.delete({
-        where: { id },
-      });
-
-      return { message: `Company ${id} removed successfully.` };
+      return await this.prisma.company.delete({ where: { id } });
     } catch (error) {
-      this.logger.error(`Failed to remove company with id: ${id}`, error);
-      throw new InternalServerErrorException('Failed to remove company');
+      this.logger.error('Failed to delete companies', error);
+      throw new InternalServerErrorException('Failed to delete companies');
     }
   }
 }

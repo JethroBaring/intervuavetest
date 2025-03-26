@@ -1,12 +1,11 @@
 import {
   Injectable,
-  InternalServerErrorException,
   Logger,
-  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { CreateInterviewDto } from './dto/create-interview.dto';
-import { UpdateInterviewDto } from './dto/update-interview.dto';
+import { CreateInterviewsDto } from './dto/create-interviews.dto';
+import { UpdateInterviewsDto } from './dto/update-interviews.dto';
 
 @Injectable()
 export class InterviewsService {
@@ -14,75 +13,66 @@ export class InterviewsService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createInterviewDto: CreateInterviewDto) {
-    try {
-      return await this.prisma.interview.create({
-        data: createInterviewDto,
-      });
-    } catch (error) {
-      this.logger.error('Failed to create interview', error);
-      throw new InternalServerErrorException('Failed to create interview');
-    }
+  async create(candidateId: string, createDto: CreateInterviewsDto) {
+    return this.prisma.interview.create({
+      data: {
+        ...createDto,
+        candidateId, // ✅ include in data
+        interviewLink: '',
+      },
+    });
   }
 
-  async findAll() {
+  async findAll(companyId: string) {
     try {
       return await this.prisma.interview.findMany({
+        where: {
+          candidate: {
+            companyId,
+          },
+        },
         include: {
           candidate: true,
-          position: true,
-          responses: true,
-          evaluation: true,
+          role: {
+            include: {
+              interviewTemplate: true,
+            },
+          },
         },
       });
     } catch (error) {
-      this.logger.error('Failed to fetch interviews', error);
-      throw new InternalServerErrorException('Failed to fetch interviews');
+      this.logger.error('Failed to get interviews for company', error);
+      throw new InternalServerErrorException('Failed to get interviews');
     }
   }
 
   async findOne(id: string) {
     try {
-      const interview = await this.prisma.interview.findUnique({
-        where: { id },
-        include: {
-          candidate: true,
-          position: true,
-          responses: true,
-          evaluation: true,
-        },
-      });
-
-      if (!interview) throw new NotFoundException('Interview not found');
-      return interview;
+      return await this.prisma.interview.findUnique({ where: { id } });
     } catch (error) {
-      this.logger.error(`Failed to fetch interview with id: ${id}`, error);
-      throw error;
+      this.logger.error('Failed to get interviews', error);
+      throw new InternalServerErrorException('Failed to get interviews');
     }
   }
 
-  async update(id: string, updateInterviewDto: UpdateInterviewDto) {
+  async update(id: string, updateDto: UpdateInterviewsDto) {
     try {
       return await this.prisma.interview.update({
         where: { id },
-        data: updateInterviewDto,
+        data: updateDto,
       });
     } catch (error) {
-      this.logger.error(`Failed to update interview with id: ${id}`, error);
-      throw new InternalServerErrorException('Failed to update interview');
+      this.logger.error('Failed to update interviews', error);
+      throw new InternalServerErrorException('Failed to update interviews');
     }
   }
 
   async remove(id: string) {
     try {
-      await this.prisma.interview.delete({
-        where: { id },
-      });
-
-      return { message: `Interview ${id} removed successfully.` };
+      return await this.prisma.interview.delete({ where: { id } });
     } catch (error) {
-      this.logger.error(`Failed to remove interview with id: ${id}`, error);
-      throw new InternalServerErrorException('Failed to remove interview');
+      this.logger.error('Failed to delete interviews', error);
+      throw new InternalServerErrorException('Failed to delete interviews');
     }
   }
 }
