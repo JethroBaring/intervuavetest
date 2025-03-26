@@ -10,3 +10,82 @@ model Candidate {
   updatedAt  DateTime    @updatedAt
   deletedAt  DateTime?
 }
+
+model Interview {
+  id            String          @id @default(cuid())
+  candidateId   String
+  roleId        String
+  interviewLink String          @unique
+  expiresAt     DateTime
+  videoUrl      String
+  cameraType    InputType
+  micType       InputType
+  noiseLevel    Float?
+  deviceType    DeviceType
+  candidate     Candidate       @relation(fields: [candidateId], references: [id])
+  role          Role            @relation(fields: [roleId], references: [id])
+  responses     Response[]
+  evaluation    Evaluation?
+  status        InterviewStatus @default(PENDING)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  deletedAt     DateTime?
+}
+
+model Response {
+  id          String @id @default(cuid())
+  interviewId String
+  questionId  String
+
+  // Transcripts
+  transcriptWeb     String
+  transcriptWhisper String
+  finalTranscript   String
+
+  // Timing
+  startTime Float
+  endTime   Float
+
+  // Video
+  videoChunkUrl String
+
+  emotion String
+  tone    String
+  eyeGaze String
+  posture String
+
+  metrics Json
+
+  interview Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  question  Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+enum InterviewStatus {
+  DRAFT
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  PROCESSING
+  EVALUATED
+  EXPIRED
+}
+
+enum DeviceType {
+  LAPTOP
+  DESKTOP
+  MOBILE
+  TABLET
+}
+
+enum InputType {
+  BUILT_IN
+  EXTERNAL
+}
+
+enum Decision {
+  APPROVED
+  REJECTED
+}

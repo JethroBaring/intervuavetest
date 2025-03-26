@@ -64,7 +64,11 @@ export class CompaniesService {
         where: { ownerId: id },
         include: {
           coreValues: true,
-          positions: true,
+          positions: {
+            include: {
+              interviewTemplate: true,
+            },
+          },
           interviewTemplates: {
             include: {
               questions: true,

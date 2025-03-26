@@ -3,7 +3,7 @@ model User {
   email        String  @unique
   password     String
   refreshToken String?
-  role         Role    @default(COMPANY)
+  role         UserType    @default(COMPANY)
 
   company Company?
 
@@ -12,7 +12,7 @@ model User {
   deletedAt DateTime?
 }
 
-enum Role {
+enum UserType {
   ADMIN
   COMPANY
 }
