@@ -47,26 +47,6 @@ cultureFitComposite = (valuesFit + missionAlignment + visionAlignment + cultureF
 ✅ **Culture Fit is 70% of the final score** (dominates).  
 ✅ **Response Quality is 30%** (supports).
 
----
-
-## 📚 Why This Approach?
-
-- Research shows **cultural alignment** predicts long-term success better than skills or communication alone.
-- Studies: Chatman (1989), Kristof (1996), Rivera (2012).
-
-✅ **Culture Fit is prioritized**.  
-✅ **Response Quality still matters**, but **cannot outweigh** culture alignment.
-
----
-
-# 🎤 Quick Phrases You Can Say
-> "We separate how the candidate answers from what the candidate believes."
-
-> "Culture fit matters more, so we weight it 70%, and response quality 30%."
-
-> "We use AI and LLMs to check not just speaking skills, but real value alignment."
->
-> 
 # 📋 Candidate Processing and Evaluation Flow
 
 ## 1. Preprocessing Stage
