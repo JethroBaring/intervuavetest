@@ -1,5 +1,5 @@
 
-# 📝 Intervuave – Scoring System Cheat Sheet
+# 📝 Intervuave
 
 ## 🎯 Main Idea
 - We evaluate candidates using **two categories**:
