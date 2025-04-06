@@ -1,104 +1,67 @@
-# Intervuave
 
-**Intervuave** is a dynamic AI-powered interviewer system designed for cultural fit assessment. It analyzes candidate responses based on company-defined mission, vision, culture, and core values using video-based interviews, emotion recognition, and LLM-enhanced feedback.
+# 📝 Intervuave – Scoring System Cheat Sheet
 
----
-
-## 🎯 Core Focus
-
-Evaluate candidates not just by skill — but by how well they align with the company’s **culture**, **values**, **mission**, and **vision**.
+## 🎯 Main Idea
+- We evaluate candidates using **two categories**:
+  - **Response Quality** → How they deliver their answers.
+  - **Culture Fit** → How their answers align with company values, mission, and vision.
 
 ---
 
-## 🏗️ Architecture Overview
+## ⚙️ 1. Response Quality
 
-### 🧠 AI Worker Stack
-- **FastAPI worker** (Python):  
-  - Runs Whisper (speech-to-text)
-  - DeepFace (emotion)
-  - Mediapipe (posture, eye gaze, gestures)
-  - Sentiment scoring
+| Metric | Meaning |
+|:---|:---|
+| Speech Clarity | How clearly the candidate speaks. |
+| Confidence | How confident they appear. |
+| Emotional Tone | Emotional appropriateness. |
+| Engagement | Energy, attention, involvement. |
+| Body Language | Posture, gestures, expressions. |
 
-- **LLM**: Evaluates alignment to culture, values, mission, vision
-
-- **NestJS Backend** (Node):
-  - Auth & Admin APIs
-  - Job queuing (Celery + RabbitMQ)
-  - Prisma ORM (PostgreSQL)
-
-- **Next.js Frontend**:
-  - Company admin dashboard
-  - Candidate interview portal
-  - Zustand for auth state
+✅ Evaluated **per question** using video/audio analysis.  
+✅ Companies **can customize** the weights inside this group.
 
 ---
 
-## 🧱 Key Features
+## ⚙️ 2. Culture Fit
 
-### 🔐 Auth
-- JWT with HTTP-only cookies
-- Refresh logic via Axios + middleware
+| Aspect | Meaning |
+|:---|:---|
+| Value-Specific Fit | Does the answer show the targeted core value? |
+| Mission Alignment | Is the answer consistent with company mission? |
+| Vision Alignment | Is the answer consistent with company vision? |
+| Culture Fit | Is the answer consistent with company culture overall? |
 
-### 📝 Interview Setup
-- `Position` = interview context (title, voice, template)
-- `InterviewTemplate` = reusable set of questions
-- `ResponseMetric` = fixed metrics with per-template weights
-
-### 🎤 Metrics Tracked (per response)
-- `speechClarity`
-- `confidence`
-- `engagement`
-- `emotionalTone`
-- `bodyLanguage`
-
-### 🎯 Scoring Outputs
-- `valuesFit`
-- `missionAlignment`
-- `visionAlignment`
-- `cultureFit` (composite)
-- Per-question feedback + per-value breakdown
+✅ Evaluated **per question** using **LLM** (semantic analysis of the transcript).
 
 ---
 
-## 🌐 Video Upload Flow
+## ➗ 3. Final Score Computation
 
-1. Frontend requests signed URL from NestJS
-2. Direct upload to GCP Cloud Storage
-3. Send `videoUrl`, `timestamps`, and `raw transcript` to backend
-4. Job queued for processing → then evaluation
+```plaintext
+overallFitScore = (0.30 × positionFit) + (0.70 × cultureFitComposite)
 
----
+cultureFitComposite = (valuesFit + missionAlignment + visionAlignment + cultureFit) / 4
+```
 
-## 📁 Project Structure
-
-| Folder | Description |
-|--------|-------------|
-| `frontend` | Next.js frontend |
-| `backend` | NestJS backend |
-| `interview-worker` | FastAPI AI processing |
-| `evaluation-worker` | FastAPI AI evaluation |
-
+✅ **Culture Fit is 70% of the final score** (dominates).  
+✅ **Response Quality is 30%** (supports).
 
 ---
 
-## 🚀 Getting Started
+## 📚 Why This Approach?
 
-> Full setup instructions coming soon!  
-For now, ensure you have:
-- Node.js 18+
-- Python 3.10+
-- PostgreSQL
-- Redis (optional for Celery broker)
-- RabbitMQ
+- Research shows **cultural alignment** predicts long-term success better than skills or communication alone.
+- Studies: Chatman (1989), Kristof (1996), Rivera (2012).
+
+✅ **Culture Fit is prioritized**.  
+✅ **Response Quality still matters**, but **cannot outweigh** culture alignment.
 
 ---
 
-## 🧪 Research Focus
+# 🎤 Quick Phrases You Can Say
+> "We separate how the candidate answers from what the candidate believes."
 
-This system was built as part of a cultural fit assessment study. It aims to measure alignment based on behavioral signals and value-driven responses.
+> "Culture fit matters more, so we weight it 70%, and response quality 30%."
 
----
-
-## 📄 License
-
-MIT © 2024 — built by Jethro
+> "We use AI and LLMs to check not just speaking skills, but real value alignment."
